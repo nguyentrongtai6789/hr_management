@@ -36,7 +36,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 jwt = authHeader.substring(7);
                 username = jwtUtil.extractUsername(jwt);
             }
-        } catch (Exception ignored) {
+        } catch (Exception exception) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+            return;
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
