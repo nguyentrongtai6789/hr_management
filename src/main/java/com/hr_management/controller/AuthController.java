@@ -39,8 +39,6 @@ public class AuthController {
         // nếu matches thì sẽ trả ra một đối tượng Authentication chứa UserDetails
         // sau đó lấu UserDetails này generateToken
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-        BCryptPasswordEncoder s = new BCryptPasswordEncoder();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthResponse(token));
