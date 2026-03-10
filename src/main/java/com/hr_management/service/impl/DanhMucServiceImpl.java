@@ -1,7 +1,8 @@
-package com.hr_management.service;
+package com.hr_management.service.impl;
 
 import com.hr_management.dto.response.DanhMucResponse;
 import com.hr_management.repository.DanhMucRepository;
+import com.hr_management.service.DanhMucService;
 import com.hr_management.utils.TableName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

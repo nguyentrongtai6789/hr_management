@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<String> handleIllegalArgument(MissingServletRequestParameterException ex, HttpServletRequest request) {
+    public ResponseEntity<String> handleMissingRequestParameter(MissingServletRequestParameterException ex, HttpServletRequest request) {
         log.error("MissingServletRequestParameterException at {} {}", request.getMethod(), request.getRequestURI(), ex);
         return ResponseEntity.badRequest().body("Missing request parameter");
     }
@@ -47,6 +47,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleNotFound(NoResourceFoundException ex, HttpServletRequest request) {
         log.error("Resource not found at {} {}", request.getMethod(), request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
+        log.error("RuntimeException at {} {}", request.getMethod(), request.getRequestURI(), ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
