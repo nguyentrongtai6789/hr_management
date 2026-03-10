@@ -1,4 +1,4 @@
-package com.hr_management.util;
+package com.hr_management.utils;
 
 import lombok.Getter;
 

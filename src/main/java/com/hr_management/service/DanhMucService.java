@@ -1,7 +1,7 @@
 package com.hr_management.service;
 
 import com.hr_management.dto.response.DanhMucResponse;
-import com.hr_management.util.TableName;
+import com.hr_management.utils.TableName;
 
 import java.util.List;
 
