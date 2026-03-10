@@ -22,7 +22,6 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     public void insertCongViec(CongViecRequest request) {
         String sql = """
                 INSERT INTO cong_viec (
-                    uuid,
                     noi_dung_cong_viec,
                     loai_cong_viec_id,
                     ma_cong_viec,
@@ -32,7 +31,6 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                     ngay_ket_thuc
                 )
                 VALUES (
-                    SYS_GUID(),
                     :noiDungCongViec,
                     :loaiCongViecId,
                     :maCongViec,

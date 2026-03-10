@@ -2,7 +2,7 @@ package com.hr_management.controller;
 
 import com.hr_management.dto.request.AuthRequest;
 import com.hr_management.dto.response.AuthResponse;
-import com.hr_management.security.JwtUtil;
+import com.hr_management.config.security.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

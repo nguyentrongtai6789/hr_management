@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 public class CongViecRequest {
     private String uuid;
     private String noiDungCongViec;
-    private String loaiCongViecId;
+    private Integer loaiCongViecId;
     private String maCongViec;
     private String noLucThucHien;
-    private String trangThaiId;
+    private Integer trangThaiId;
     private LocalDateTime  ngayBatDau;
     private LocalDateTime ngayKetThuc;
 }

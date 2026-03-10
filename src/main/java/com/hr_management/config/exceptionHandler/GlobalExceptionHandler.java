@@ -1,4 +1,4 @@
-package com.hr_management.exceptionHandler;
+package com.hr_management.config.exceptionHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
