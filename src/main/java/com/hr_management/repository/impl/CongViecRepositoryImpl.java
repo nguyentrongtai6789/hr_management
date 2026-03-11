@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -53,28 +54,41 @@ public class CongViecRepositoryImpl implements CongViecRepository {
 
     @Override
     public void updateCongViecByUuid(CongViecRequest request) {
-        String sql = """
-                UPDATE cong_viec
-                SET
-                    noi_dung_cong_viec = :noiDungCongViec,
-                    loai_cong_viec_id = :loaiCongViecId,
-                    ma_cong_viec = :maCongViec,
-                    no_luc_thuc_hien = :noLucThucHien,
-                    trang_thai_id = :trangThaiId,
-                    ngay_bat_dau = :ngayBatDau,
-                    ngay_ket_thuc = :ngayKetThuc
-                WHERE uuid = HEXTORAW(:uuid)
-                """;
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("uuid", request.getUuid())
-                .addValue("noiDungCongViec", request.getNoiDungCongViec())
-                .addValue("loaiCongViecId", request.getLoaiCongViecId())
-                .addValue("maCongViec", request.getMaCongViec())
-                .addValue("noLucThucHien", request.getNoLucThucHien())
-                .addValue("trangThaiId", request.getTrangThaiId())
-                .addValue("ngayBatDau", request.getNgayBatDau())
-                .addValue("ngayKetThuc", request.getNgayKetThuc());
-        namedParameterJdbcTemplate.update(sql, param);
+        StringBuilder sql = new StringBuilder(" UPDATE cong_viec SET ");
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("uuid", request.getUuid());
+        List<String> updates = new ArrayList<>();
+        if (request.getNoiDungCongViec() != null) {
+            updates.add("noi_dung_cong_viec = :noiDungCongViec");
+            param.addValue("noiDungCongViec", request.getNoiDungCongViec());
+        }
+        if (request.getLoaiCongViecId() != null) {
+            updates.add("loai_cong_viec_id = :loaiCongViecId");
+            param.addValue("loaiCongViecId", request.getLoaiCongViecId());
+        }
+        if (request.getMaCongViec() != null) {
+            updates.add("ma_cong_viec = :maCongViec");
+            param.addValue("maCongViec", request.getMaCongViec());
+        }
+        if (request.getNoLucThucHien() != null) {
+            updates.add("no_luc_thuc_hien = :noLucThucHien");
+            param.addValue("noLucThucHien", request.getNoLucThucHien());
+        }
+        if (request.getTrangThaiId() != null) {
+            updates.add("trang_thai_id = :trangThaiId");
+            param.addValue("trangThaiId", request.getTrangThaiId());
+        }
+        if (request.getNgayBatDau() != null) {
+            updates.add("ngay_bat_dau = :ngayBatDau");
+            param.addValue("ngayBatDau", request.getNgayBatDau());
+        }
+        if (request.getNgayKetThuc() != null) {
+            updates.add("ngay_ket_thuc = :ngayKetThuc");
+            param.addValue("ngayKetThuc", request.getNgayKetThuc());
+        }
+        sql.append(String.join(", ", updates));
+        sql.append(" WHERE uuid = HEXTORAW(:uuid) ");
+        namedParameterJdbcTemplate.update(sql.toString(), param);
     }
 
     @Override
