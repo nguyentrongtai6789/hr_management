@@ -5,10 +5,8 @@ import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.CongViecRepository;
 import com.hr_management.service.CongViecService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -26,18 +24,14 @@ public class CongViecServiceimpl implements CongViecService {
 
     @Override
     public void updateCongViecByUuid(CongViecRequest request) {
-        var congViec = congViecRepository.findOneByUuid(request.getUuid());
-        if (congViec == null) {
-            throw new RuntimeException(
-                    "Không tìm thấy công việc với uuid: " + request.getUuid()
-            );
-        }
+        this.findOneByUuid(request.getUuid());
         congViecRepository.updateCongViecByUuid(request);
     }
 
     @Override
     public void deleteCongViecByUuid(String uuid) {
-
+        this.findOneByUuid(uuid);
+        congViecRepository.deleteCongViecByUuid(uuid);
     }
 
     @Override
@@ -51,6 +45,6 @@ public class CongViecServiceimpl implements CongViecService {
 
     @Override
     public List<CongViecResponse> findAll(CongViecRequest congViecRequest, Integer page, Integer size) {
-        return List.of();
+        return congViecRepository.findAll(congViecRequest, page, size);
     }
 }
