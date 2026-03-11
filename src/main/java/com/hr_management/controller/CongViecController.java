@@ -29,7 +29,7 @@ public class CongViecController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> updateCongViec(@RequestParam @NotBlank String uuid) {
+    public ResponseEntity<?> deleteCongViecByUuid(@RequestParam @NotBlank String uuid) {
         congViecService.deleteCongViecByUuid(uuid);
         return ResponseEntity.ok("Xoá công việc thành công!");
     }
