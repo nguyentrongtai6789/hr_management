@@ -5,11 +5,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtil {
@@ -25,11 +27,15 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetailsCustom userDetailsCustom) {
+        List<String> roles = userDetailsCustom.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
         return Jwts.builder()
-                .subject(userDetailsCustom.getUsername())
                 .claim("id", userDetailsCustom.getId())
-                .claim("roles", userDetailsCustom.getAuthorities())
+                .subject(userDetailsCustom.getUsername())
                 .claim("nhanSuId", userDetailsCustom.getNhanSuId())
+                .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
                 .signWith(key)
