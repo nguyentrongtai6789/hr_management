@@ -24,10 +24,12 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetailsCustom userDetailsCustom) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .claim("roles", userDetails.getAuthorities())
+                .subject(userDetailsCustom.getUsername())
+                .claim("id", userDetailsCustom.getId())
+                .claim("roles", userDetailsCustom.getAuthorities())
+                .claim("nhanSuId", userDetailsCustom.getNhanSuId())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
                 .signWith(key)
@@ -38,9 +40,9 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetailsCustom userDetailsCustom) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(userDetailsCustom.getUsername()) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpiringSoon(String token) {
@@ -54,7 +56,7 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()

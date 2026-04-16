@@ -18,6 +18,6 @@ public class CongViecRequest {
     private String maCongViec;
     private String noLucThucHien;
     private Integer trangThaiId;
-    private LocalDateTime  ngayBatDau;
+    private LocalDateTime ngayBatDau;
     private LocalDateTime ngayKetThuc;
 }

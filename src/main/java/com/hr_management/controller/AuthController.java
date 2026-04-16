@@ -1,5 +1,6 @@
 package com.hr_management.controller;
 
+import com.hr_management.config.security.UserDetailsCustom;
 import com.hr_management.dto.request.AuthRequest;
 import com.hr_management.dto.response.AuthResponse;
 import com.hr_management.config.security.JwtUtil;
@@ -38,7 +39,7 @@ public class AuthController {
         // nếu matches thì sẽ trả ra một đối tượng Authentication chứa UserDetails
         // sau đó lấu UserDetails này generateToken
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsCustom userDetails = (UserDetailsCustom) authentication.getPrincipal();
         String token = jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(new AuthResponse(token));
     }
