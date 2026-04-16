@@ -24,8 +24,8 @@ public class User {
     @NotBlank
     private String password;
 
-    @Column(name = "NHAN_SU_ID", nullable = true)
-    private UUID nhanSuId;
+    @Column(name = "NHAN_SU_ID")
+    private String nhanSuId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "USERS_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))

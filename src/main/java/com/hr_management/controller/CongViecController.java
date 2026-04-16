@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class CongViecController {
     private final CongViecService congViecService;
 
+    @GetMapping("/get-tien-do-by-nhan-su-id")
+    public ResponseEntity<?> getTienDoCongViecByNhanSuId() {
+        var data = congViecService.getTienDoCongViecByNhanSuId();
+        return ResponseEntity.ok(data);
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<?> insertCongViec(@RequestBody CongViecRequest request) {
         congViecService.insertCongViec(request);

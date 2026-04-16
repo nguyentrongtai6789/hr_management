@@ -34,7 +34,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("id", userDetailsCustom.getId())
                 .subject(userDetailsCustom.getUsername())
-                .claim("nhanSuId", userDetailsCustom.getNhanSuId())
+                .claim("nhanSuId", userDetailsCustom.getNhanSuId().toString())
                 .claim("roles", roles)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour

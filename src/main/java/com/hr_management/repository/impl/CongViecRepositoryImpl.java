@@ -1,6 +1,7 @@
 package com.hr_management.repository.impl;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.CongViecRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +13,29 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
 public class CongViecRepositoryImpl implements CongViecRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Override
+    public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(UUID nhanSuId) {
+        String sql = """
+                select b.TEN    as trangThai,
+                       b.id     as trangThaiId,
+                       count(1) as soLuong
+                from cong_viec a
+                         left join trang_thai_cong_viec b on a.TRANG_THAI_ID = b.ID
+                where nhan_su_id = :nhanSuId
+                group by TRANG_THAI_ID
+                """;
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("nhanSuId", nhanSuId);
+        return namedParameterJdbcTemplate.query(sql, sqlParameterSource, new BeanPropertyRowMapper<>(TienDoCongViecRequest.class));
+    }
 
     @Override
     public void insertCongViec(CongViecRequest request) {
