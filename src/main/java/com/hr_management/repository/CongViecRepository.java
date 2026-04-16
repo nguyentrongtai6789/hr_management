@@ -4,10 +4,11 @@ import com.hr_management.dto.request.CongViecRequest;
 import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CongViecRepository {
-    List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(String nhanSuId);
+    List<TienDoCongViecRequest> getTienDoCongViec(String nhanSuId, LocalDateTime startDate, LocalDateTime endDate);
 
     void insertCongViec(CongViecRequest congViecRequest);
 

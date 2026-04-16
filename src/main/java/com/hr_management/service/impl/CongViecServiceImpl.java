@@ -6,6 +6,7 @@ import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.CongViecRepository;
 import com.hr_management.service.CongViecService;
+import com.hr_management.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,13 @@ public class CongViecServiceImpl implements CongViecService {
 
     private final SecurityUtils securityUtils;
 
+    private final DateUtils dateUtils;
+
     @Override
-    public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId() {
+    public List<TienDoCongViecRequest> getTienDoCongViec(String thangNam) {
         String nhanSuId = securityUtils.getCurrentNhanSuId();
-        return congViecRepository.getTienDoCongViecByNhanSuId(nhanSuId);
+        DateUtils.TimeRange range = dateUtils.fromMonth(thangNam);
+        return congViecRepository.getTienDoCongViec(nhanSuId, range.start(), range.end());
     }
 
     @Override

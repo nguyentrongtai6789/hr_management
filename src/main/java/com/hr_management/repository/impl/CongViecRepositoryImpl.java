@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +22,20 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(String nhanSuId) {
+    public List<TienDoCongViecRequest> getTienDoCongViec(String nhanSuId, LocalDateTime startDate, LocalDateTime endDate) {
         String sql = """
                 select b.TEN    as trangThai,
                        b.id     as trangThaiId,
                        count(1) as soLuong
                 from cong_viec a
                          left join trang_thai_cong_viec b on a.TRANG_THAI_ID = b.ID
-                where nhan_su_id = :nhanSuId
+                where nhan_su_id = :nhanSuId and a.NGAY_BAT_DAU >= :startDate and a.NGAY_BAT_DAU < :endDate
                 group by TRANG_THAI_ID
                 """;
         MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
         sqlParameterSource.addValue("nhanSuId", nhanSuId);
+        sqlParameterSource.addValue("startDate", startDate);
+        sqlParameterSource.addValue("endDate", endDate);
         return namedParameterJdbcTemplate.query(sql, sqlParameterSource, new BeanPropertyRowMapper<>(TienDoCongViecRequest.class));
     }
 

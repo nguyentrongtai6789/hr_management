@@ -7,7 +7,7 @@ import com.hr_management.dto.response.CongViecResponse;
 import java.util.List;
 
 public interface CongViecService {
-    List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId();
+    List<TienDoCongViecRequest> getTienDoCongViec(String thangNam);
 
     void insertCongViec(CongViecRequest congViecRequest);
 
