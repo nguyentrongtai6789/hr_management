@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "USERS")
@@ -22,6 +23,9 @@ public class User {
     @Column(name = "PASSWORD", nullable = false)
     @NotBlank
     private String password;
+
+    @Column(name = "NHAN_SU_ID")
+    private String nhanSuId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "USERS_ROLE", joinColumns = @JoinColumn(name = "USER_ID"))

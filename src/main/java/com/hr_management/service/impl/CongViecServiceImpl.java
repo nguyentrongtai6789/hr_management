@@ -1,9 +1,12 @@
 package com.hr_management.service.impl;
 
+import com.hr_management.config.security.SecurityUtils;
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.CongViecRepository;
 import com.hr_management.service.CongViecService;
+import com.hr_management.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,14 +15,25 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CongViecServiceimpl implements CongViecService {
+public class CongViecServiceImpl implements CongViecService {
 
     private final CongViecRepository congViecRepository;
+
+    private final SecurityUtils securityUtils;
+
+    private final DateUtils dateUtils;
+
+    @Override
+    public List<TienDoCongViecRequest> getTienDoCongViec(String thangNam) {
+        String nhanSuId = securityUtils.getCurrentNhanSuId();
+        DateUtils.TimeRange range = dateUtils.fromMonth(thangNam);
+        return congViecRepository.getTienDoCongViec(nhanSuId, range.start(), range.end());
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void insertCongViec(CongViecRequest request) {
-            congViecRepository.insertCongViec(request);
+        congViecRepository.insertCongViec(request);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.hr_management.repository.impl;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.CongViecRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,24 @@ import java.util.List;
 public class CongViecRepositoryImpl implements CongViecRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Override
+    public List<TienDoCongViecRequest> getTienDoCongViec(String nhanSuId, LocalDateTime startDate, LocalDateTime endDate) {
+        String sql = """
+                select b.TEN    as trangThai,
+                       b.id     as trangThaiId,
+                       count(1) as soLuong
+                from cong_viec a
+                         left join trang_thai_cong_viec b on a.TRANG_THAI_ID = b.ID
+                where nhan_su_id = :nhanSuId and a.NGAY_BAT_DAU >= :startDate and a.NGAY_BAT_DAU < :endDate
+                group by TRANG_THAI_ID
+                """;
+        MapSqlParameterSource sqlParameterSource = new MapSqlParameterSource();
+        sqlParameterSource.addValue("nhanSuId", nhanSuId);
+        sqlParameterSource.addValue("startDate", startDate);
+        sqlParameterSource.addValue("endDate", endDate);
+        return namedParameterJdbcTemplate.query(sql, sqlParameterSource, new BeanPropertyRowMapper<>(TienDoCongViecRequest.class));
+    }
 
     @Override
     public void insertCongViec(CongViecRequest request) {
@@ -135,30 +155,29 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     public List<CongViecResponse> findAll(CongViecRequest request, Integer page, Integer size) {
         int offset = page * size;
         StringBuilder dataSql = new StringBuilder("""
-                    SELECT
-                        RAWTOHEX(cv.uuid) AS uuid,
-                        cv.noi_dung_cong_viec AS noiDungCongViec,
-                        cv.loai_cong_viec_id AS loaiCongViecId,
-                        lcv.ten AS loaiCongViecTen,
-                        cv.ma_cong_viec AS maCongViec,
-                        cv.no_luc_thuc_hien AS noLucThucHien,
-                        cv.trang_thai_id AS trangThaiId,
-                        ttcv.ten AS trangThaiTen,
-                        cv.ngay_bat_dau AS ngayBatDau,
-                        TO_CHAR(cv.ngay_bat_dau,'DD/MM/YYYY HH24:MI') AS ngayBatDauString,
-                        cv.ngay_ket_thuc AS ngayKetThuc,
-                        TO_CHAR(cv.ngay_ket_thuc,'DD/MM/YYYY HH24:MI') AS ngayKetThucString
-                    FROM cong_viec cv
-                    LEFT JOIN loai_cong_viec lcv
-                        ON cv.loai_cong_viec_id = lcv.id
-                    LEFT JOIN trang_thai_cong_viec ttcv
-                        ON cv.trang_thai_id = ttcv.id
-                    WHERE 1=1
+                SELECT cv.uuid                                         AS uuid,
+                       cv.noi_dung_cong_viec                           AS noiDungCongViec,
+                       cv.loai_cong_viec_id                            AS loaiCongViecId,
+                       lcv.ten                                         AS loaiCongViecTen,
+                       cv.ma_cong_viec                                 AS maCongViec,
+                       cv.no_luc_thuc_hien                             AS noLucThucHien,
+                       cv.trang_thai_id                                AS trangThaiId,
+                       ttcv.ten                                        AS trangThaiTen,
+                       cv.ngay_bat_dau                                 AS ngayBatDau,
+                       DATE_FORMAT(cv.ngay_bat_dau, '%d/%m/%Y %H:%i')  AS ngayBatDauString,
+                       cv.ngay_ket_thuc                                AS ngayKetThuc,
+                       DATE_FORMAT(cv.ngay_ket_thuc, '%d/%m/%Y %H:%i') AS ngayKetThucString
+                FROM cong_viec cv
+                         LEFT JOIN loai_cong_viec lcv
+                                   ON cv.loai_cong_viec_id = lcv.id
+                         LEFT JOIN trang_thai_cong_viec ttcv
+                                   ON cv.trang_thai_id = ttcv.id
+                WHERE 1 = 1
                 """);
         StringBuilder countSql = new StringBuilder("""
                     SELECT COUNT(*)
                     FROM cong_viec cv
-                    WHERE 1=1
+                    WHERE 1 = 1
                 """);
         MapSqlParameterSource params = new MapSqlParameterSource();
         // search nội dung
@@ -167,11 +186,23 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             countSql.append(" AND LOWER(cv.noi_dung_cong_viec) LIKE LOWER(:noiDung) ");
             params.addValue("noiDung", "%" + request.getNoiDungCongViec() + "%");
         }
-        // filter trạng thái
+        // filter loại công việc
+        if (request.getLoaiCongViecId() != null) {
+            dataSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
+            countSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
+            params.addValue("loaiCongViecId", request.getLoaiCongViecId());
+        }
+        // filter mã công việc
         if (request.getTrangThaiId() != null) {
             dataSql.append(" AND cv.trang_thai_id = :trangThaiId ");
             countSql.append(" AND cv.trang_thai_id = :trangThaiId ");
             params.addValue("trangThaiId", request.getTrangThaiId());
+        }
+        // filter loại công việc
+        if (request.getLoaiCongViecId() != null) {
+            dataSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
+            countSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
+            params.addValue("loaiCongViecId", request.getLoaiCongViecId());
         }
         // sort
         dataSql.append(" ORDER BY cv.ngay_bat_dau DESC ");

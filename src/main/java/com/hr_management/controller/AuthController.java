@@ -1,15 +1,17 @@
 package com.hr_management.controller;
 
+import com.hr_management.config.security.JwtUtil;
+import com.hr_management.config.security.UserDetailsCustom;
 import com.hr_management.dto.request.AuthRequest;
 import com.hr_management.dto.response.AuthResponse;
-import com.hr_management.config.security.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,17 +31,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
-        // tạo  1 đối tượng UsernamePasswordAuthenticationToken từ username và password
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-        // truyền đối tượng đó vào AuthenticationManager để authen
-        // ở bước này, AuthenticationManager sẽ gọi UserDetailsService.loadUserByUsername() => cái này đã được override để trả ra user lấy từ DataBase
-        // sau đó sẽ dùng PasswordEncoder.matches() để so sánh xem password trong db (ở dạng encode) có  matches với password truyền về không
-        // nếu matches thì sẽ trả ra một đối tượng Authentication chứa UserDetails
-        // sau đó lấu UserDetails này generateToken
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(token));
+        try {
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                    = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+            Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+            UserDetailsCustom userDetails = (UserDetailsCustom) authentication.getPrincipal();
+            String token = jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new AuthResponse(token));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
     }
 }
