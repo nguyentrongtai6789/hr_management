@@ -1,8 +1,17 @@
 package com.hr_management.dto.request;
 
 
-public record TienDoCongViecRequest(
-        String trangThai,
-        Long trangThaiId,
-        Long soLuong
-) {}
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class TienDoCongViecRequest {
+    private String trangThai;
+    private Long trangThaiId;
+    private int soLuong;
+}

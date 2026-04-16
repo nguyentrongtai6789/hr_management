@@ -11,11 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class CongViecServiceimpl implements CongViecService {
+public class CongViecServiceImpl implements CongViecService {
 
     private final CongViecRepository congViecRepository;
 
@@ -23,7 +22,7 @@ public class CongViecServiceimpl implements CongViecService {
 
     @Override
     public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId() {
-        UUID nhanSuId = securityUtils.getCurrentNhanSuId();
+        String nhanSuId = securityUtils.getCurrentNhanSuId();
         return congViecRepository.getTienDoCongViecByNhanSuId(nhanSuId);
     }
 

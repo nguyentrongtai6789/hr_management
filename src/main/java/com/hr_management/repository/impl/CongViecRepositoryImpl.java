@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(UUID nhanSuId) {
+    public List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(String nhanSuId) {
         String sql = """
                 select b.TEN    as trangThai,
                        b.id     as trangThaiId,

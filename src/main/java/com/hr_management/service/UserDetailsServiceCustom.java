@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +23,7 @@ public class UserDetailsServiceCustom implements UserDetailsService {
     public UserDetailsCustom loadUserByUsername(String username) throws UsernameNotFoundException {
         var userData = userRepository.findFirstByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
         Set<GrantedAuthority> roles = userData.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toSet());
-        return new UserDetailsCustom(userData.getId(), UUID.fromString(userData.getNhanSuId()), userData.getUserName(), userData.getPassword(), roles);
+        return new UserDetailsCustom(userData.getId(), userData.getNhanSuId(), userData.getUserName(), userData.getPassword(), roles);
     }
 }
 

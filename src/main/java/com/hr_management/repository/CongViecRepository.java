@@ -5,10 +5,9 @@ import com.hr_management.dto.request.TienDoCongViecRequest;
 import com.hr_management.dto.response.CongViecResponse;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CongViecRepository {
-    List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(UUID nhanSuId);
+    List<TienDoCongViecRequest> getTienDoCongViecByNhanSuId(String nhanSuId);
 
     void insertCongViec(CongViecRequest congViecRequest);
 
