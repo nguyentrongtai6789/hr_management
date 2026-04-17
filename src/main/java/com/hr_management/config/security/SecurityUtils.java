@@ -15,15 +15,8 @@ public class SecurityUtils {
         return (UserDetailsCustom) auth.getPrincipal();
     }
 
-    public Long getCurrentUserId() {
-        return getCurrentUser().getId();
-    }
-
     public String getCurrentNhanSuId() {
         return getCurrentUser().getNhanSuId();
     }
 
-    public String getUsername() {
-        return getCurrentUser().getUsername();
-    }
 }

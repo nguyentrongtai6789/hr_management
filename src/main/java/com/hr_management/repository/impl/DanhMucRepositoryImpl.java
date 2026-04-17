@@ -20,7 +20,7 @@ public class DanhMucRepositoryImpl implements DanhMucRepository {
     @Override
     public DanhMucResponse findById(TableName tableName, Long id) {
         SqlParameterSource map = new MapSqlParameterSource("id", id);
-        String sql = "SELECT * FROM " + tableName.getTableName() + " WHERE id = :id ORDER BY id";
+        String sql = "SELECT * FROM " + tableName.getTableName() + " WHERE id = :id";
         var list = namedParameterJdbcTemplate.query(sql, map,  BeanPropertyRowMapper.newInstance(DanhMucResponse.class));
         return list.isEmpty() ? null : list.getFirst();
     }
