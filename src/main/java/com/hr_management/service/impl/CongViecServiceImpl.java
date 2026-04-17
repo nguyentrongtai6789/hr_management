@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class CongViecServiceImpl implements CongViecService {
 
     private final CongViecRepository congViecRepository;
@@ -38,7 +39,6 @@ public class CongViecServiceImpl implements CongViecService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void insertCongViec(CongViecRequest request) {
         congViecRepository.insertCongViec(request);
     }
