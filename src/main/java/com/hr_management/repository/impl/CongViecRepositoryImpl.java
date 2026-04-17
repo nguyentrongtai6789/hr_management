@@ -148,7 +148,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     public void deleteCongViecByUuid(String uuid) {
         String sql = """
                 DELETE FROM cong_viec
-                WHERE uuid = HEXTORAW(:uuid)
+                WHERE uuid = :uuid
                 """;
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("uuid", uuid);
