@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 public class DateUtils {
 
     private static final DateTimeFormatter MM_YYYY = DateTimeFormatter.ofPattern("MM-yyyy");
-    private static final DateTimeFormatter DD_MM_YYYY = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public TimeRange fromMonth(String input) {
         YearMonth ym = YearMonth.parse(input, MM_YYYY);

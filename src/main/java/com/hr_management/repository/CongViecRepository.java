@@ -10,13 +10,13 @@ import java.util.List;
 public interface CongViecRepository {
     List<TienDoCongViecRequest> getTienDoCongViec(String nhanSuId, LocalDateTime startDate, LocalDateTime endDate);
 
-    void insertCongViec(CongViecRequest congViecRequest);
+    void insertCongViec(CongViecRequest congViecRequest, String nhanSuId);
 
     void updateCongViecByUuid(CongViecRequest request);
 
     void deleteCongViecByUuid(String uuid);
 
-    CongViecResponse findOneByUuid(String uuid);
+    CongViecResponse findOneByUuid(String uuid, String nhanSuId);
 
-    List<CongViecResponse> findAll(CongViecRequest congViecRequest, Integer page, Integer size);
+    List<CongViecResponse> findAll(CongViecRequest congViecRequest, String nhanSuId, Integer page, Integer size);
 }

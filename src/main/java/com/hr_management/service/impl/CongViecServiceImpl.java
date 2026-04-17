@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(rollbackFor = Exception.class)
 public class CongViecServiceImpl implements CongViecService {
 
     private final CongViecRepository congViecRepository;
@@ -23,17 +24,23 @@ public class CongViecServiceImpl implements CongViecService {
 
     private final DateUtils dateUtils;
 
-    @Override
-    public List<TienDoCongViecRequest> getTienDoCongViec(String thangNam) {
-        String nhanSuId = securityUtils.getCurrentNhanSuId();
-        DateUtils.TimeRange range = dateUtils.fromMonth(thangNam);
-        return congViecRepository.getTienDoCongViec(nhanSuId, range.start(), range.end());
+    private String getNhanSuId() {
+        String id = securityUtils.getCurrentNhanSuId();
+        if (id == null) {
+            throw new RuntimeException("User chưa login");
+        }
+        return id;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    public List<TienDoCongViecRequest> getTienDoCongViec(String thoiGian) {
+        DateUtils.TimeRange range = dateUtils.fromMonth(thoiGian);
+        return congViecRepository.getTienDoCongViec(getNhanSuId(), range.start(), range.end());
+    }
+
+    @Override
     public void insertCongViec(CongViecRequest request) {
-        congViecRepository.insertCongViec(request);
+        congViecRepository.insertCongViec(request, getNhanSuId());
     }
 
     @Override
@@ -50,7 +57,7 @@ public class CongViecServiceImpl implements CongViecService {
 
     @Override
     public CongViecResponse findOneByUuid(String uuid) {
-        var congViec = congViecRepository.findOneByUuid(uuid);
+        var congViec = congViecRepository.findOneByUuid(uuid, getNhanSuId());
         if (congViec == null) {
             throw new RuntimeException("Không tìm thấy công việc với id là: " + uuid);
         }
@@ -59,6 +66,6 @@ public class CongViecServiceImpl implements CongViecService {
 
     @Override
     public List<CongViecResponse> findAll(CongViecRequest congViecRequest, Integer page, Integer size) {
-        return congViecRepository.findAll(congViecRequest, page, size);
+        return congViecRepository.findAll(congViecRequest, getNhanSuId(), page, size);
     }
 }
