@@ -10,7 +10,7 @@ import java.util.List;
 public interface CongViecRepository {
     List<TienDoCongViecRequest> getTienDoCongViec(String nhanSuId, LocalDateTime startDate, LocalDateTime endDate);
 
-    void insertCongViec(CongViecRequest congViecRequest);
+    void insertCongViec(CongViecRequest congViecRequest, String nhanSuId);
 
     void updateCongViecByUuid(CongViecRequest request);
 

@@ -19,6 +19,7 @@ public class CongViecRequest {
     private String maCongViec;
     private String noLucThucHien;
     private Integer trangThaiId;
+    private Integer sanPhamId;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate ngayBatDau;
     @JsonFormat(pattern = "dd-MM-yyyy")

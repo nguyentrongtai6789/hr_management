@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -41,36 +43,67 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     }
 
     @Override
-    public void insertCongViec(CongViecRequest request) {
+    public void insertCongViec(CongViecRequest request, String nhanSuId) {
         String sql = """
                 INSERT INTO cong_viec (
                     noi_dung_cong_viec,
                     loai_cong_viec_id,
-                    ma_cong_viec,
                     no_luc_thuc_hien,
                     trang_thai_id,
+                    san_pham_id,
                     ngay_bat_dau,
-                    ngay_ket_thuc
+                    ngay_ket_thuc,
+                    nhan_su_id
                 )
                 VALUES (
                     :noiDungCongViec,
                     :loaiCongViecId,
-                    :maCongViec,
                     :noLucThucHien,
                     :trangThaiId,
+                    :sanPhamId,
                     :ngayBatDau,
-                    :ngayKetThuc
+                    :ngayKetThuc,
+                    :nhanSuId
                 )
                 """;
+        if (Objects.isNull(request.getNoiDungCongViec()) || request.getNoiDungCongViec().isBlank()) {
+            throw new IllegalArgumentException();
+        }
+        if (Objects.isNull(request.getLoaiCongViecId())) {
+            throw new IllegalArgumentException();
+        }
+        if (Objects.isNull(request.getSanPhamId())) {
+            throw new IllegalArgumentException();
+        }
+        if (Objects.isNull(request.getNgayBatDau())) {
+            throw new IllegalArgumentException();
+        }
+        if (Objects.isNull(request.getNgayKetThuc())) {
+            throw new IllegalArgumentException();
+        }
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("noiDungCongViec", request.getNoiDungCongViec())
                 .addValue("loaiCongViecId", request.getLoaiCongViecId())
                 .addValue("maCongViec", request.getMaCongViec())
                 .addValue("noLucThucHien", request.getNoLucThucHien())
-                .addValue("trangThaiId", request.getTrangThaiId())
+                .addValue("trangThaiId", 1)
+                .addValue("sanPhamId", request.getSanPhamId())
                 .addValue("ngayBatDau", request.getNgayBatDau())
-                .addValue("ngayKetThuc", request.getNgayKetThuc());
-        namedParameterJdbcTemplate.update(sql, param);
+                .addValue("ngayKetThuc", request.getNgayKetThuc())
+                .addValue("nhanSuId", nhanSuId);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(sql, param, keyHolder);
+        Number seq = keyHolder.getKey();
+        assert seq != null;
+        String ma = String.format("CV.%05d", seq.longValue());
+        namedParameterJdbcTemplate.update("""
+                    UPDATE cong_viec
+                    SET ma_cong_viec = :ma
+                    WHERE seq = :seq
+                """, new MapSqlParameterSource()
+                .addValue("ma", ma)
+                .addValue("seq", seq)
+        );
     }
 
     @Override
