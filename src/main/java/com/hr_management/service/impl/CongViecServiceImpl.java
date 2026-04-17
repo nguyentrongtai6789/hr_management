@@ -23,11 +23,18 @@ public class CongViecServiceImpl implements CongViecService {
 
     private final DateUtils dateUtils;
 
+    private String getNhanSuId() {
+        String id = securityUtils.getCurrentNhanSuId();
+        if (id == null) {
+            throw new RuntimeException("User chưa login");
+        }
+        return id;
+    }
+
     @Override
-    public List<TienDoCongViecRequest> getTienDoCongViec(String thangNam) {
-        String nhanSuId = securityUtils.getCurrentNhanSuId();
-        DateUtils.TimeRange range = dateUtils.fromMonth(thangNam);
-        return congViecRepository.getTienDoCongViec(nhanSuId, range.start(), range.end());
+    public List<TienDoCongViecRequest> getTienDoCongViec(String thoiGian) {
+        DateUtils.TimeRange range = dateUtils.fromMonth(thoiGian);
+        return congViecRepository.getTienDoCongViec(getNhanSuId(), range.start(), range.end());
     }
 
     @Override
@@ -59,6 +66,6 @@ public class CongViecServiceImpl implements CongViecService {
 
     @Override
     public List<CongViecResponse> findAll(CongViecRequest congViecRequest, Integer page, Integer size) {
-        return congViecRepository.findAll(congViecRequest, page, size);
+        return congViecRepository.findAll(congViecRequest, getNhanSuId(), page, size);
     }
 }

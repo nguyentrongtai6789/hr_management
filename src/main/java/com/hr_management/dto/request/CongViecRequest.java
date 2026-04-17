@@ -1,11 +1,12 @@
 package com.hr_management.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,6 +19,8 @@ public class CongViecRequest {
     private String maCongViec;
     private String noLucThucHien;
     private Integer trangThaiId;
-    private LocalDateTime ngayBatDau;
-    private LocalDateTime ngayKetThuc;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate ngayBatDau;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate ngayKetThuc;
 }

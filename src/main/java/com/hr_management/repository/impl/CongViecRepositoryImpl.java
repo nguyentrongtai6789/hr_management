@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -152,7 +153,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     }
 
     @Override
-    public List<CongViecResponse> findAll(CongViecRequest request, Integer page, Integer size) {
+    public List<CongViecResponse> findAll(CongViecRequest request, String nhanSuId, Integer page, Integer size) {
         int offset = page * size;
         StringBuilder dataSql = new StringBuilder("""
                 SELECT cv.uuid                                         AS uuid,
@@ -164,9 +165,9 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                        cv.trang_thai_id                                AS trangThaiId,
                        ttcv.ten                                        AS trangThaiTen,
                        cv.ngay_bat_dau                                 AS ngayBatDau,
-                       DATE_FORMAT(cv.ngay_bat_dau, '%d/%m/%Y %H:%i')  AS ngayBatDauString,
+                       DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
                        cv.ngay_ket_thuc                                AS ngayKetThuc,
-                       DATE_FORMAT(cv.ngay_ket_thuc, '%d/%m/%Y %H:%i') AS ngayKetThucString
+                       DATE_FORMAT(cv.ngay_ket_thuc, '%d-%m-%Y %H:%i') AS ngayKetThucString
                 FROM cong_viec cv
                          LEFT JOIN loai_cong_viec lcv
                                    ON cv.loai_cong_viec_id = lcv.id
@@ -181,35 +182,56 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                 """);
         MapSqlParameterSource params = new MapSqlParameterSource();
         // search nội dung
-        if (request.getNoiDungCongViec() != null && !request.getNoiDungCongViec().isBlank()) {
+        if (Objects.nonNull(request.getNoiDungCongViec()) && !request.getNoiDungCongViec().isBlank()) {
             dataSql.append(" AND LOWER(cv.noi_dung_cong_viec) LIKE LOWER(:noiDung) ");
             countSql.append(" AND LOWER(cv.noi_dung_cong_viec) LIKE LOWER(:noiDung) ");
             params.addValue("noiDung", "%" + request.getNoiDungCongViec() + "%");
         }
         // filter loại công việc
-        if (request.getLoaiCongViecId() != null) {
+        if (Objects.nonNull(request.getLoaiCongViecId())) {
             dataSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
             countSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
             params.addValue("loaiCongViecId", request.getLoaiCongViecId());
         }
         // filter mã công việc
-        if (request.getTrangThaiId() != null) {
-            dataSql.append(" AND cv.trang_thai_id = :trangThaiId ");
-            countSql.append(" AND cv.trang_thai_id = :trangThaiId ");
+        if (Objects.nonNull(request.getMaCongViec()) && !request.getMaCongViec().isBlank()) {
+            dataSql.append(" AND cv.MA_CONG_VIEC = :maCongViec ");
+            countSql.append(" AND cv.MA_CONG_VIEC = :maCongViec ");
+            params.addValue("maCongViec", request.getMaCongViec());
+        }
+        // search nỗ lực thực hiện
+        if (Objects.nonNull(request.getNoLucThucHien()) && !request.getNoLucThucHien().isBlank()) {
+            dataSql.append(" AND LOWER(cv.NO_LUC_THUC_HIEN) LIKE LOWER(:noLucThucHien) ");
+            countSql.append(" AND LOWER(cv.NO_LUC_THUC_HIEN) LIKE LOWER(:noLucThucHien) ");
+            params.addValue("noLucThucHien", "%" + request.getNoLucThucHien() + "%");
+        }
+        // filter trạng thái
+        if (Objects.nonNull(request.getTrangThaiId())) {
+            dataSql.append(" AND cv.TRANG_THAI_ID = :trangThaiId ");
+            countSql.append(" AND cv.TRANG_THAI_ID = :trangThaiId ");
             params.addValue("trangThaiId", request.getTrangThaiId());
         }
-        // filter loại công việc
-        if (request.getLoaiCongViecId() != null) {
-            dataSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
-            countSql.append(" AND cv.loai_cong_viec_id = :loaiCongViecId ");
-            params.addValue("loaiCongViecId", request.getLoaiCongViecId());
+        if (Objects.nonNull(request.getNgayBatDau())) {
+            dataSql.append(" AND cv.NGAY_BAT_DAU >= :ngayBatDau ");
+            countSql.append(" AND cv.NGAY_BAT_DAU >= :ngayBatDau ");
+            params.addValue("ngayBatDau", request.getNgayBatDau());
+        }
+        if (Objects.nonNull(request.getNgayKetThuc())) {
+            dataSql.append(" AND cv.NGAY_KET_THUC <= :ngayKetThuc ");
+            countSql.append(" AND cv.NGAY_KET_THUC <= :ngayKetThuc ");
+            params.addValue("ngayKetThuc", request.getNgayKetThuc());
+        }
+        if (!nhanSuId.isBlank()) {
+            dataSql.append(" AND cv.nhan_su_id = :nhanSuId ");
+            countSql.append(" AND cv.nhan_su_id = :nhanSuId ");
+            params.addValue("nhanSuId", nhanSuId);
         }
         // sort
         dataSql.append(" ORDER BY cv.ngay_bat_dau DESC ");
         // pagination
-        dataSql.append(" OFFSET :offset ROWS FETCH NEXT :size ROWS ONLY ");
-        params.addValue("offset", offset);
+        dataSql.append(" LIMIT :size OFFSET :offset ");
         params.addValue("size", size);
+        params.addValue("offset", offset);
         List<CongViecResponse> list = namedParameterJdbcTemplate.query(
                 dataSql.toString(),
                 params,

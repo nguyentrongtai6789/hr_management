@@ -18,5 +18,5 @@ public interface CongViecRepository {
 
     CongViecResponse findOneByUuid(String uuid);
 
-    List<CongViecResponse> findAll(CongViecRequest congViecRequest, Integer page, Integer size);
+    List<CongViecResponse> findAll(CongViecRequest congViecRequest, String nhanSuId, Integer page, Integer size);
 }
