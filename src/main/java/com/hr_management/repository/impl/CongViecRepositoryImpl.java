@@ -124,10 +124,10 @@ public class CongViecRepositoryImpl implements CongViecRepository {
     }
 
     @Override
-    public CongViecResponse findOneByUuid(String uuid) {
+    public CongViecResponse findOneByUuid(String uuid, String nhanSuId) {
         String sql = """
                     SELECT
-                        RAWTOHEX(cv.uuid) AS uuid,
+                        cv.uuid AS uuid,
                         cv.noi_dung_cong_viec AS noiDungCongViec,
                         cv.loai_cong_viec_id AS loaiCongViecId,
                         lcv.ten AS loaiCongViecTen,
@@ -136,18 +136,19 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                         cv.trang_thai_id AS trangThaiId,
                         ttcv.ten AS trangThaiTen,
                         cv.ngay_bat_dau AS ngayBatDau,
-                        TO_CHAR(cv.ngay_bat_dau,'DD/MM/YYYY HH24:MI') AS ngayBatDauString,
+                        DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
                         cv.ngay_ket_thuc AS ngayKetThuc,
-                        TO_CHAR(cv.ngay_ket_thuc,'DD/MM/YYYY HH24:MI') AS ngayKetThucString
+                        DATE_FORMAT(cv.ngay_ket_thuc, '%d-%m-%Y %H:%i') AS ngayKetThucString
                     FROM cong_viec cv
                     LEFT JOIN loai_cong_viec lcv
                         ON cv.loai_cong_viec_id = lcv.id
                     LEFT JOIN trang_thai_cong_viec ttcv
                         ON cv.trang_thai_id = ttcv.id
-                    WHERE cv.uuid = HEXTORAW(:uuid)
+                    WHERE cv.uuid = :uuid and cv.nhan_su_id = :nhanSuId
                 """;
         SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("uuid", uuid);
+                .addValue("uuid", uuid)
+                .addValue("nhanSuId", nhanSuId);
         var list = namedParameterJdbcTemplate.query(sql, param, BeanPropertyRowMapper.newInstance(CongViecResponse.class));
         return list.isEmpty() ? null : list.getFirst();
     }

@@ -57,7 +57,7 @@ public class CongViecServiceImpl implements CongViecService {
 
     @Override
     public CongViecResponse findOneByUuid(String uuid) {
-        var congViec = congViecRepository.findOneByUuid(uuid);
+        var congViec = congViecRepository.findOneByUuid(uuid, getNhanSuId());
         if (congViec == null) {
             throw new RuntimeException("Không tìm thấy công việc với id là: " + uuid);
         }

@@ -16,7 +16,7 @@ public interface CongViecRepository {
 
     void deleteCongViecByUuid(String uuid);
 
-    CongViecResponse findOneByUuid(String uuid);
+    CongViecResponse findOneByUuid(String uuid, String nhanSuId);
 
     List<CongViecResponse> findAll(CongViecRequest congViecRequest, String nhanSuId, Integer page, Integer size);
 }
