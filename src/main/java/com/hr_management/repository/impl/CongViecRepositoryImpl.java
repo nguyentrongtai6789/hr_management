@@ -112,7 +112,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("uuid", request.getUuid());
         List<String> updates = new ArrayList<>();
-        if (request.getNoiDungCongViec() != null) {
+        if (request.getNoiDungCongViec() != null && !request.getNoiDungCongViec().isBlank()) {
             updates.add("noi_dung_cong_viec = :noiDungCongViec");
             param.addValue("noiDungCongViec", request.getNoiDungCongViec());
         }
@@ -120,11 +120,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             updates.add("loai_cong_viec_id = :loaiCongViecId");
             param.addValue("loaiCongViecId", request.getLoaiCongViecId());
         }
-        if (request.getMaCongViec() != null) {
-            updates.add("ma_cong_viec = :maCongViec");
-            param.addValue("maCongViec", request.getMaCongViec());
-        }
-        if (request.getNoLucThucHien() != null) {
+        if (request.getNoLucThucHien() != null && !request.getNoLucThucHien().isBlank()) {
             updates.add("no_luc_thuc_hien = :noLucThucHien");
             param.addValue("noLucThucHien", request.getNoLucThucHien());
         }
@@ -140,8 +136,11 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             updates.add("ngay_ket_thuc = :ngayKetThuc");
             param.addValue("ngayKetThuc", request.getNgayKetThuc());
         }
+        if (updates.isEmpty()) {
+            return;
+        }
         sql.append(String.join(", ", updates));
-        sql.append(" WHERE uuid = HEXTORAW(:uuid) ");
+        sql.append(" WHERE uuid = :uuid");
         namedParameterJdbcTemplate.update(sql.toString(), param);
     }
 
