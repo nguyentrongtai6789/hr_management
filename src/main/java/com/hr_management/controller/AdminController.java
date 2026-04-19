@@ -27,4 +27,9 @@ public class AdminController {
                                      @RequestParam @NotNull Integer size) {
         return ResponseEntity.ok(adminService.findAll(request, page, size));
     }
+
+    @PostMapping("/find-one-by-uuid")
+    public ResponseEntity<?> findOneByUuid(@RequestParam @NotBlank String uuid) {
+        return ResponseEntity.ok(adminService.findOneByUuid(uuid));
+    }
 }

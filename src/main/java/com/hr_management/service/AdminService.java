@@ -11,4 +11,6 @@ public interface AdminService {
 
     List<CongViecResponse> findAll(CongViecRequest request, Integer page, Integer size);
 
+    CongViecResponse findOneByUuid(String uuid);
+
 }
