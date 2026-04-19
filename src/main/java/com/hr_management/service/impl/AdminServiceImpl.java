@@ -43,4 +43,13 @@ public class AdminServiceImpl implements AdminService {
         return congViec;
     }
 
+    @Override
+    public void updateCongViecByUuid(CongViecRequest request) {
+        var congViec = congViecRepository.findOneByUuid(request.getUuid(), "");
+        if (congViec == null) {
+            throw new RuntimeException("Không tìm thấy công việc với id là: " + request.getUuid());
+        }
+        congViecRepository.updateCongViecByUuid(request);
+    }
+
 }
