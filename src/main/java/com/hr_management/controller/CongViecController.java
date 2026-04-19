@@ -17,7 +17,7 @@ public class CongViecController {
     private final CongViecService congViecService;
 
     @GetMapping("/get-tien-do")
-    public ResponseEntity<?> getTienDoCongViec(@RequestParam String thoiGian) {
+    public ResponseEntity<?> getTienDoCongViec(@RequestParam @NotBlank String thoiGian) {
         var data = congViecService.getTienDoCongViec(thoiGian);
         return ResponseEntity.ok(data);
     }
