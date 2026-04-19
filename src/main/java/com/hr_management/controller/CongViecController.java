@@ -46,7 +46,9 @@ public class CongViecController {
     }
 
     @PostMapping("/find-all")
-    public ResponseEntity<?> findAll(@RequestBody CongViecRequest request, @RequestParam @NotNull Integer page, @RequestParam @NotNull Integer size) {
+    public ResponseEntity<?> findAll(@RequestBody CongViecRequest request,
+                                     @RequestParam @NotNull Integer page,
+                                     @RequestParam @NotNull Integer size) {
         return ResponseEntity.ok(congViecService.findAll(request, page, size));
     }
 

@@ -254,10 +254,15 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             countSql.append(" AND cv.NGAY_KET_THUC <= :ngayKetThuc ");
             params.addValue("ngayKetThuc", request.getNgayKetThuc());
         }
-        if (!nhanSuId.isBlank()) {
+        if (Objects.nonNull(nhanSuId) && !nhanSuId.isBlank()) {
             dataSql.append(" AND cv.nhan_su_id = :nhanSuId ");
             countSql.append(" AND cv.nhan_su_id = :nhanSuId ");
             params.addValue("nhanSuId", nhanSuId);
+        }
+        if (Objects.nonNull(request.getNhanSuIds()) && !request.getNhanSuIds().isEmpty()) {
+            dataSql.append(" AND cv.nhan_su_id in (:nhanSuIds) ");
+            countSql.append(" AND cv.nhan_su_id in (:nhanSuIds) ");
+            params.addValue("nhanSuIds", request.getNhanSuIds());
         }
         // sort
         dataSql.append(" ORDER BY cv.ngay_bat_dau DESC ");
