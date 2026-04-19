@@ -81,6 +81,9 @@ public class CongViecRepositoryImpl implements CongViecRepository {
         if (Objects.isNull(request.getNgayKetThuc())) {
             throw new IllegalArgumentException();
         }
+        if (Objects.isNull(nhanSuId) || nhanSuId.isBlank()) {
+            throw new IllegalArgumentException();
+        }
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("noiDungCongViec", request.getNoiDungCongViec())
                 .addValue("loaiCongViecId", request.getLoaiCongViecId())

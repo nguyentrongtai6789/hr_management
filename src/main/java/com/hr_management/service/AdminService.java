@@ -13,4 +13,6 @@ public interface AdminService {
 
     CongViecResponse findOneByUuid(String uuid);
 
+    void updateCongViecByUuid(CongViecRequest request);
+
 }

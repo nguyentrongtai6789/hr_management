@@ -32,4 +32,10 @@ public class AdminController {
     public ResponseEntity<?> findOneByUuid(@RequestParam @NotBlank String uuid) {
         return ResponseEntity.ok(adminService.findOneByUuid(uuid));
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateCongViec(@RequestBody CongViecRequest request) {
+        adminService.updateCongViecByUuid(request);
+        return ResponseEntity.ok("Thực hiện thành công!");
+    }
 }
