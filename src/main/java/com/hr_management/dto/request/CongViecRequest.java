@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +21,7 @@ public class CongViecRequest {
     private String noLucThucHien;
     private Integer trangThaiId;
     private Integer sanPhamId;
+    private List<String> nhanSuIds;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate ngayBatDau;
     @JsonFormat(pattern = "dd-MM-yyyy")

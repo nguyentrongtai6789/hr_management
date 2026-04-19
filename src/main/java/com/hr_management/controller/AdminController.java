@@ -1,17 +1,35 @@
 package com.hr_management.controller;
 
+import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.service.AdminService;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
 @Slf4j
+@RequiredArgsConstructor
 public class AdminController {
-    @GetMapping("/test")
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok("OK");
+    private final AdminService adminService;
+
+    @GetMapping("/tong-quan-du-an")
+    public ResponseEntity<?> getTongQuanDuAn(@RequestParam @NotBlank String thoiGian) {
+        return ResponseEntity.ok(adminService.getTongQuanCongViecAdm(thoiGian));
+    }
+
+    @PostMapping("/quan-ly-cong-viec")
+    public ResponseEntity<?> findAll(@RequestBody CongViecRequest request,
+                                     @RequestParam @NotNull Integer page,
+                                     @RequestParam @NotNull Integer size) {
+        return ResponseEntity.ok(adminService.findAll(request, page, size));
+    }
+
+    @PostMapping("/find-one-by-uuid")
+    public ResponseEntity<?> findOneByUuid(@RequestParam @NotBlank String uuid) {
+        return ResponseEntity.ok(adminService.findOneByUuid(uuid));
     }
 }

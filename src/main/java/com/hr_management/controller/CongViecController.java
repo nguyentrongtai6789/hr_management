@@ -17,7 +17,7 @@ public class CongViecController {
     private final CongViecService congViecService;
 
     @GetMapping("/get-tien-do")
-    public ResponseEntity<?> getTienDoCongViec(@RequestParam String thoiGian) {
+    public ResponseEntity<?> getTienDoCongViec(@RequestParam @NotBlank String thoiGian) {
         var data = congViecService.getTienDoCongViec(thoiGian);
         return ResponseEntity.ok(data);
     }
@@ -46,7 +46,9 @@ public class CongViecController {
     }
 
     @PostMapping("/find-all")
-    public ResponseEntity<?> findAll(@RequestBody CongViecRequest request, @RequestParam @NotNull Integer page, @RequestParam @NotNull Integer size) {
+    public ResponseEntity<?> findAll(@RequestBody CongViecRequest request,
+                                     @RequestParam @NotNull Integer page,
+                                     @RequestParam @NotNull Integer size) {
         return ResponseEntity.ok(congViecService.findAll(request, page, size));
     }
 

@@ -157,31 +157,37 @@ public class CongViecRepositoryImpl implements CongViecRepository {
 
     @Override
     public CongViecResponse findOneByUuid(String uuid, String nhanSuId) {
-        String sql = """
-                    SELECT
-                        cv.uuid AS uuid,
-                        cv.noi_dung_cong_viec AS noiDungCongViec,
-                        cv.loai_cong_viec_id AS loaiCongViecId,
-                        lcv.ten AS loaiCongViecTen,
-                        cv.ma_cong_viec AS maCongViec,
-                        cv.no_luc_thuc_hien AS noLucThucHien,
-                        cv.trang_thai_id AS trangThaiId,
-                        ttcv.ten AS trangThaiTen,
-                        cv.ngay_bat_dau AS ngayBatDau,
-                        DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
-                        cv.ngay_ket_thuc AS ngayKetThuc,
-                        DATE_FORMAT(cv.ngay_ket_thuc, '%d-%m-%Y %H:%i') AS ngayKetThucString
-                    FROM cong_viec cv
-                    LEFT JOIN loai_cong_viec lcv
-                        ON cv.loai_cong_viec_id = lcv.id
-                    LEFT JOIN trang_thai_cong_viec ttcv
-                        ON cv.trang_thai_id = ttcv.id
-                    WHERE cv.uuid = :uuid and cv.nhan_su_id = :nhanSuId
-                """;
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("uuid", uuid)
-                .addValue("nhanSuId", nhanSuId);
-        var list = namedParameterJdbcTemplate.query(sql, param, BeanPropertyRowMapper.newInstance(CongViecResponse.class));
+        StringBuilder sql = new StringBuilder();
+        sql.append("""
+                SELECT cv.uuid AS uuid,
+                       cv.noi_dung_cong_viec AS noiDungCongViec,
+                       cv.loai_cong_viec_id AS loaiCongViecId,
+                       lcv.ten AS loaiCongViecTen,
+                       cv.ma_cong_viec AS maCongViec,
+                       cv.no_luc_thuc_hien AS noLucThucHien,
+                       cv.trang_thai_id AS trangThaiId,
+                       ttcv.ten AS trangThaiTen,
+                       cv.ngay_bat_dau AS ngayBatDau,
+                       DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
+                       cv.ngay_ket_thuc AS ngayKetThuc,
+                       DATE_FORMAT(cv.ngay_ket_thuc, '%d-%m-%Y %H:%i') AS ngayKetThucString
+                FROM cong_viec cv
+                            LEFT JOIN loai_cong_viec lcv
+                                ON cv.loai_cong_viec_id = lcv.id
+                            LEFT JOIN trang_thai_cong_viec ttcv
+                                ON cv.trang_thai_id = ttcv.id
+                WHERE 1 = 1
+                """);
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        if (nhanSuId != null && !nhanSuId.isEmpty()) {
+            sql.append(" and cv.nhan_su_id = :nhanSuId ");
+            map.addValue("nhanSuId", nhanSuId);
+        }
+        if (uuid != null && !uuid.isEmpty()) {
+            sql.append(" and cv.uuid = :uuid ");
+            map.addValue("uuid", uuid);
+        }
+        var list = namedParameterJdbcTemplate.query(sql.toString(), map, BeanPropertyRowMapper.newInstance(CongViecResponse.class));
         return list.isEmpty() ? null : list.getFirst();
     }
 
@@ -254,10 +260,15 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             countSql.append(" AND cv.NGAY_KET_THUC <= :ngayKetThuc ");
             params.addValue("ngayKetThuc", request.getNgayKetThuc());
         }
-        if (!nhanSuId.isBlank()) {
+        if (Objects.nonNull(nhanSuId) && !nhanSuId.isBlank()) {
             dataSql.append(" AND cv.nhan_su_id = :nhanSuId ");
             countSql.append(" AND cv.nhan_su_id = :nhanSuId ");
             params.addValue("nhanSuId", nhanSuId);
+        }
+        if (Objects.nonNull(request.getNhanSuIds()) && !request.getNhanSuIds().isEmpty()) {
+            dataSql.append(" AND cv.nhan_su_id in (:nhanSuIds) ");
+            countSql.append(" AND cv.nhan_su_id in (:nhanSuIds) ");
+            params.addValue("nhanSuIds", request.getNhanSuIds());
         }
         // sort
         dataSql.append(" ORDER BY cv.ngay_bat_dau DESC ");
