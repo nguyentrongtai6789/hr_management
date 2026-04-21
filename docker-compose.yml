@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hr_management
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
