@@ -6,7 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hr_management
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
     env_file:
       - .env
+    networks:
+      - backend
+networks:
+  backend:
