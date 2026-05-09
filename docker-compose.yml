@@ -1,12 +1,16 @@
 version: "3.8"
 
 services:
-  app:
+  hr_management_service:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: hr_management
     ports:
       - "8081:8081"
     env_file:
       - .env
+    networks:
+      - hr_management_network
+networks:
+  hr_management_network:
+    external: true
