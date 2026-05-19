@@ -1,6 +1,7 @@
 package com.hr_management.controller;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.repository.NhanSuRepository;
 import com.hr_management.service.AdminService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
     private final AdminService adminService;
+    private final NhanSuRepository nhanSuRepository;
 
     @GetMapping("/tong-quan-du-an")
     public ResponseEntity<?> getTongQuanDuAn(@RequestParam @NotBlank String thoiGian) {
@@ -37,5 +39,10 @@ public class AdminController {
     public ResponseEntity<?> updateCongViec(@RequestBody CongViecRequest request) {
         adminService.updateCongViecByUuid(request);
         return ResponseEntity.ok("Thực hiện thành công!");
+    }
+
+    @GetMapping("/nhan-su")
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(nhanSuRepository.findAll());
     }
 }

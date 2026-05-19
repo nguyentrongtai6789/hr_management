@@ -205,6 +205,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                        cv.ma_cong_viec                                 AS maCongViec,
                        cv.no_luc_thuc_hien                             AS noLucThucHien,
                        cv.trang_thai_id                                AS trangThaiId,
+                       cv.san_pham_id                                AS sanPhamId,
                        ttcv.ten                                        AS trangThaiTen,
                        cv.ngay_bat_dau                                 AS ngayBatDau,
                        DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
@@ -252,6 +253,12 @@ public class CongViecRepositoryImpl implements CongViecRepository {
             dataSql.append(" AND cv.TRANG_THAI_ID = :trangThaiId ");
             countSql.append(" AND cv.TRANG_THAI_ID = :trangThaiId ");
             params.addValue("trangThaiId", request.getTrangThaiId());
+        }
+
+        if (Objects.nonNull(request.getSanPhamId())) {
+            dataSql.append(" AND cv.SAN_PHAM_ID = :sanPhamId ");
+            countSql.append(" AND cv.SAN_PHAM_ID = :sanPhamId ");
+            params.addValue("sanPhamId", request.getSanPhamId());
         }
         if (Objects.nonNull(request.getNgayBatDau())) {
             dataSql.append(" AND cv.NGAY_BAT_DAU >= :ngayBatDau ");

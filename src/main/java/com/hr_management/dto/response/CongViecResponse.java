@@ -20,6 +20,7 @@ public class CongViecResponse {
     private String noLucThucHien;
     private String trangThaiTen;
     private Long trangThaiId;
+    private Long sanPhamId;
     private LocalDateTime ngayBatDau;
     private String ngayBatDauString;
     private LocalDateTime ngayKetThuc;
