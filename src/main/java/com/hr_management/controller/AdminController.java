@@ -4,6 +4,7 @@ import com.hr_management.dto.request.CongViecRequest;
 import com.hr_management.repository.NhanSuRepository;
 import com.hr_management.service.AdminService;
 import com.hr_management.service.CongViecService;
+import com.hr_management.service.QuanLyNhanSuService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class AdminController {
     private final AdminService adminService;
     private final NhanSuRepository nhanSuRepository;
     private final CongViecService congViecService;
+    private final QuanLyNhanSuService quanLyNhanSuService;
 
     @GetMapping("/tong-quan-du-an")
     public ResponseEntity<?> getTongQuanDuAn(@RequestParam @NotBlank String thoiGian) {
@@ -55,4 +57,8 @@ public class AdminController {
         return ResponseEntity.ok("Giao công việc thành công!");
     }
 
+    @GetMapping("/quan-ly-nhan-su")
+    public ResponseEntity<?> quanLyNhanSu() {
+        return ResponseEntity.ok(quanLyNhanSuService.getAllNhanSu());
+    }
 }
