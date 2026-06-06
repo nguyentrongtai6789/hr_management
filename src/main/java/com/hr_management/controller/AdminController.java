@@ -1,10 +1,12 @@
 package com.hr_management.controller;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.NhanSuRequest;
 import com.hr_management.repository.NhanSuRepository;
 import com.hr_management.service.AdminService;
 import com.hr_management.service.CongViecService;
 import com.hr_management.service.QuanLyNhanSuService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +59,8 @@ public class AdminController {
         return ResponseEntity.ok("Giao công việc thành công!");
     }
 
-    @GetMapping("/quan-ly-nhan-su")
-    public ResponseEntity<?> quanLyNhanSu() {
-        return ResponseEntity.ok(quanLyNhanSuService.getAllNhanSu());
+    @PostMapping("/quan-ly-nhan-su")
+    public ResponseEntity<?> quanLyNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        return ResponseEntity.ok(quanLyNhanSuService.getAllNhanSu(request));
     }
 }

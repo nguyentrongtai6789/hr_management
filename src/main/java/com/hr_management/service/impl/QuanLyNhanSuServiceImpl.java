@@ -1,5 +1,6 @@
 package com.hr_management.service.impl;
 
+import com.hr_management.dto.request.NhanSuRequest;
 import com.hr_management.dto.response.QuanLyNhanSuResponse;
 import com.hr_management.repository.QuanLyNhanSuRepository;
 import com.hr_management.service.QuanLyNhanSuService;
@@ -14,7 +15,7 @@ public class QuanLyNhanSuServiceImpl implements QuanLyNhanSuService {
     private final QuanLyNhanSuRepository quanLyNhanSuRepository;
 
     @Override
-    public List<QuanLyNhanSuResponse> getAllNhanSu() {
-        return quanLyNhanSuRepository.findAllNhanSu();
+    public List<QuanLyNhanSuResponse> getAllNhanSu(NhanSuRequest request) {
+        return quanLyNhanSuRepository.findAllNhanSu(request);
     }
 }
