@@ -89,7 +89,7 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                 .addValue("loaiCongViecId", request.getLoaiCongViecId())
                 .addValue("maCongViec", request.getMaCongViec())
                 .addValue("noLucThucHien", request.getNoLucThucHien())
-                .addValue("trangThaiId", 1)
+                .addValue("trangThaiId", request.getTrangThaiId())
                 .addValue("sanPhamId", request.getSanPhamId())
                 .addValue("ngayBatDau", request.getNgayBatDau())
                 .addValue("ngayKetThuc", request.getNgayKetThuc())

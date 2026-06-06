@@ -3,6 +3,7 @@ package com.hr_management.controller;
 import com.hr_management.dto.request.CongViecRequest;
 import com.hr_management.repository.NhanSuRepository;
 import com.hr_management.service.AdminService;
+import com.hr_management.service.CongViecService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final AdminService adminService;
     private final NhanSuRepository nhanSuRepository;
+    private final CongViecService congViecService;
 
     @GetMapping("/tong-quan-du-an")
     public ResponseEntity<?> getTongQuanDuAn(@RequestParam @NotBlank String thoiGian) {
@@ -45,4 +47,12 @@ public class AdminController {
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(nhanSuRepository.findAll());
     }
+
+    @PostMapping("/giao-cong-viec")
+    public ResponseEntity<?> insertCongViec(@RequestBody CongViecRequest request, @RequestParam @NotBlank String nhanSuId) {
+        request.setTrangThaiId(2);
+        congViecService.insertCongViec(request);
+        return ResponseEntity.ok("Giao công việc thành công!");
+    }
+
 }
