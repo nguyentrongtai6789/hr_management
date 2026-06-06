@@ -203,9 +203,11 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                        cv.loai_cong_viec_id                            AS loaiCongViecId,
                        lcv.ten                                         AS loaiCongViecTen,
                        cv.ma_cong_viec                                 AS maCongViec,
+                       ns.ho_ten                                       AS nhanSuHoVaTen,
                        cv.no_luc_thuc_hien                             AS noLucThucHien,
                        cv.trang_thai_id                                AS trangThaiId,
-                       cv.san_pham_id                                AS sanPhamId,
+                       cv.san_pham_id                                  AS sanPhamId,
+                       sp.ten                                          AS sanPhamTen,
                        ttcv.ten                                        AS trangThaiTen,
                        cv.ngay_bat_dau                                 AS ngayBatDau,
                        DATE_FORMAT(cv.ngay_bat_dau, '%d-%m-%Y %H:%i')  AS ngayBatDauString,
@@ -216,6 +218,8 @@ public class CongViecRepositoryImpl implements CongViecRepository {
                                    ON cv.loai_cong_viec_id = lcv.id
                          LEFT JOIN trang_thai_cong_viec ttcv
                                    ON cv.trang_thai_id = ttcv.id
+                         left join san_pham sp on cv.san_pham_id = sp.id
+                         left join nhan_su ns on cv.nhan_su_id = ns.uuid
                 WHERE 1 = 1
                 """);
         StringBuilder countSql = new StringBuilder("""
