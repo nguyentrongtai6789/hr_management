@@ -16,11 +16,13 @@ public class CongViecResponse {
     private String noiDungCongViec;
     private Long loaiCongViecId;
     private String loaiCongViecTen;
+    private String nhanSuHoVaTen;
     private String maCongViec;
     private String noLucThucHien;
     private String trangThaiTen;
     private Long trangThaiId;
     private Long sanPhamId;
+    private String sanPhamTen;
     private LocalDateTime ngayBatDau;
     private String ngayBatDauString;
     private LocalDateTime ngayKetThuc;
