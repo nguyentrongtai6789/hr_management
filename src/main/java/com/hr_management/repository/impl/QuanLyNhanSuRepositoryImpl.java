@@ -29,7 +29,8 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
                        dmDanToc.ten as danToc,
                        b.EMAIL as email,
                        b.USER_NAME as userName,
-                       ur.ROLE as roleName
+                       ur.ROLE as roleName,
+                       a.GHI_CHU as ghiChu
                 from nhan_su a
                 left join users b on a.UUID = b.nhan_su_id
                 left join dm_gioi_tinh dmGioiTinh on a.GIOI_TINH_ID = dmGioiTinh.id
@@ -69,6 +70,11 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
             if (StringUtils.hasText(request.getUserName())) {
                 sql.append(" and b.USER_NAME like :userName");
                 params.addValue("userName", "%" + request.getUserName() + "%");
+            }
+
+            if (StringUtils.hasText(request.getRoleName())) {
+                sql.append(" and ur.ROLE = :roleName");
+                params.addValue("roleName", request.getRoleName());
             }
         }
 
