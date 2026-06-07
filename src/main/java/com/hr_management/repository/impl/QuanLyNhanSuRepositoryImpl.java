@@ -137,4 +137,48 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
         paramsInsertUr.addValue("roleName", request.getRoleName());
         namedParameterJdbcTemplate.update(sqlInsertUr, paramsInsertUr);
     }
+
+    @Override
+    public void capNhatNhanSu(NhanSuRequest request) {
+        // Cập nhật bảng nhan_su
+        String sqlUpdateNhanSu = """
+                UPDATE nhan_su
+                SET HO_TEN = :hoTen,
+                    MA_DINH_DANH = :maDinhDanh,
+                    GIOI_TINH_ID = :gioiTinhId,
+                    DAN_TOC_ID = :danTocId,
+                    GHI_CHU = :ghiChu
+                WHERE UUID = (SELECT nhan_su_id FROM users WHERE USER_NAME = :userName and EMAIL = :email LIMIT 1)
+                """;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("hoTen", request.getHoTen());
+        params.addValue("maDinhDanh", request.getMaDinhDanh());
+        params.addValue("gioiTinhId", request.getGioiTinhId());
+        params.addValue("danTocId", request.getDanTocId());
+        params.addValue("ghiChu", request.getGhiChu());
+        params.addValue("userName", request.getUserName());
+        params.addValue("email", request.getEmail());
+        namedParameterJdbcTemplate.update(sqlUpdateNhanSu, params);
+//        // Cập nhật bảng users_role
+//        String sqlUpdateUsers = """
+//                update users_role set ROLE = :roleName
+//                                  where USER_ID = (select id from users
+//                                                             where USER_NAME = :userName
+//                                                               and EMAIL = :email LIMIT 1)
+//                """;
+//        MapSqlParameterSource paramsUpdateUsers = new MapSqlParameterSource();
+//        paramsUpdateUsers.addValue("email", request.getEmail());
+//        paramsUpdateUsers.addValue("userName", request.getUserName());
+//        paramsUpdateUsers.addValue("roleName", request.getRoleName());
+//        namedParameterJdbcTemplate.update(sqlUpdateUsers, paramsUpdateUsers);
+    }
+
+    @Override
+    public void xoaNhanSu(NhanSuRequest request) {
+        String sql = "update users set IS_ACTIVE = 0 where EMAIL = :email and USER_NAME = :username";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userName", request.getUserName());
+        params.addValue("email", request.getEmail());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
 }

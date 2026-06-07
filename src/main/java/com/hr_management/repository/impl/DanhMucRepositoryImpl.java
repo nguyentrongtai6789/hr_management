@@ -1,5 +1,6 @@
 package com.hr_management.repository.impl;
 
+import com.hr_management.dto.request.DanhMucRequest;
 import com.hr_management.dto.response.DanhMucResponse;
 import com.hr_management.repository.DanhMucRepository;
 import com.hr_management.utils.TableName;
@@ -30,4 +31,28 @@ public class DanhMucRepositoryImpl implements DanhMucRepository {
         String sql = "SELECT * FROM " + tableName.getTableName()  + " ORDER BY id";
         return namedParameterJdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(DanhMucResponse.class));
     }
+
+    @Override
+    public void themMoi(DanhMucRequest request, TableName tableName) {
+        String sql = "INSERT INTO " + tableName.getTableName() + " (TEN, MA, MO_TA) VALUES (:ten, :ma, :moTa)";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ten", request.getTen());
+        params.addValue("ma", request.getMa());
+        params.addValue("moTa", request.getMoTa());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public void capNhat(DanhMucRequest request, TableName tableName) {
+        String sql = "UPDATE " + tableName.getTableName() + " SET TEN = :ten, MA = :ma, MO_TA = :moTa WHERE ID = :id"
+                ;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("ten", request.getTen());
+        params.addValue("ma", request.getMa());
+        params.addValue("moTa", request.getMoTa());
+        params.addValue("id", request.getId());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+
 }

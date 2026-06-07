@@ -1,12 +1,15 @@
 package com.hr_management.service.impl;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.DanhMucRequest;
 import com.hr_management.dto.request.TongQuanCongViecAdmRequest;
 import com.hr_management.dto.response.CongViecResponse;
 import com.hr_management.repository.AdminRepository;
 import com.hr_management.repository.CongViecRepository;
+import com.hr_management.repository.DanhMucRepository;
 import com.hr_management.service.AdminService;
 import com.hr_management.utils.DateUtils;
+import com.hr_management.utils.TableName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
 
     private final CongViecRepository congViecRepository;
+
+    private final DanhMucRepository danhMucRepository;
 
     private final DateUtils dateUtils;
 
@@ -50,6 +55,16 @@ public class AdminServiceImpl implements AdminService {
             throw new RuntimeException("Không tìm thấy công việc với id là: " + request.getUuid());
         }
         congViecRepository.updateCongViecByUuid(request);
+    }
+
+    @Override
+    public void themMoiDanhMuc(DanhMucRequest request, TableName tableName) {
+        danhMucRepository.themMoi(request, tableName);
+    }
+
+    @Override
+    public void capNhatDanhMuc(DanhMucRequest request, TableName tableName) {
+        danhMucRepository.capNhat(request, tableName);
     }
 
 }

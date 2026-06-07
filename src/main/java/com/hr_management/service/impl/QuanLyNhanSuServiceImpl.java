@@ -23,4 +23,14 @@ public class QuanLyNhanSuServiceImpl implements QuanLyNhanSuService {
     public void themMoiNhanSu(NhanSuRequest request) {
         quanLyNhanSuRepository.themMoiNhanSu(request);
     }
+
+    @Override
+    public void capNhatNhanSu(NhanSuRequest request) {
+        quanLyNhanSuRepository.capNhatNhanSu(request);
+    }
+
+    @Override
+    public void xoaNhanSu(NhanSuRequest request) {
+        quanLyNhanSuRepository.xoaNhanSu(request);
+    }
 }

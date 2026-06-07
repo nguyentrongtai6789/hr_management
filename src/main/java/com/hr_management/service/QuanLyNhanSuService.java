@@ -7,5 +7,6 @@ import java.util.List;
 public interface QuanLyNhanSuService {
     List<QuanLyNhanSuResponse> getAllNhanSu(NhanSuRequest request);
     void themMoiNhanSu(NhanSuRequest request);
-
+    void capNhatNhanSu(NhanSuRequest request);
+    void xoaNhanSu(NhanSuRequest request);
 }
