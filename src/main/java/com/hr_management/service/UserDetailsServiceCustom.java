@@ -21,7 +21,7 @@ public class UserDetailsServiceCustom implements UserDetailsService {
 
     @Override
     public UserDetailsCustom loadUserByUsername(String username) throws UsernameNotFoundException {
-        var userData = userRepository.findFirstByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+        var userData = userRepository.findFirstByUserNameAndIsActive(username, 1).orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
         Set<GrantedAuthority> roles = userData.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toSet());
         return new UserDetailsCustom(userData.getId(), userData.getNhanSuId(), userData.getUserName(), userData.getPassword(), roles);
     }

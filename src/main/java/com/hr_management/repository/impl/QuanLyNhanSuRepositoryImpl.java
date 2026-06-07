@@ -175,7 +175,7 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
 
     @Override
     public void xoaNhanSu(NhanSuRequest request) {
-        String sql = "update users set IS_ACTIVE = 0 where EMAIL = :email and USER_NAME = :username";
+        String sql = "update users set IS_ACTIVE = 0 where EMAIL = :email and USER_NAME = :userName";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userName", request.getUserName());
         params.addValue("email", request.getEmail());
