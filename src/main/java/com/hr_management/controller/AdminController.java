@@ -55,7 +55,7 @@ public class AdminController {
     @PostMapping("/giao-cong-viec")
     public ResponseEntity<?> insertCongViec(@RequestBody CongViecRequest request, @RequestParam @NotBlank String nhanSuId) {
         request.setTrangThaiId(2);
-        congViecService.insertCongViec(request);
+        congViecService.adminInsertCongViec(request);
         return ResponseEntity.ok("Giao công việc thành công!");
     }
 
