@@ -18,4 +18,9 @@ public class QuanLyNhanSuServiceImpl implements QuanLyNhanSuService {
     public List<QuanLyNhanSuResponse> getAllNhanSu(NhanSuRequest request) {
         return quanLyNhanSuRepository.findAllNhanSu(request);
     }
+
+    @Override
+    public void themMoiNhanSu(NhanSuRequest request) {
+        quanLyNhanSuRepository.themMoiNhanSu(request);
+    }
 }
