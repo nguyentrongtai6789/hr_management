@@ -30,7 +30,8 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
                        b.EMAIL as email,
                        b.USER_NAME as userName,
                        ur.ROLE as roleName,
-                       a.GHI_CHU as ghiChu
+                       a.GHI_CHU as ghiChu,
+                       b.IS_ACTIVE as isActive
                 from nhan_su a
                 left join users b on a.UUID = b.nhan_su_id
                 left join dm_gioi_tinh dmGioiTinh on a.GIOI_TINH_ID = dmGioiTinh.id
@@ -77,7 +78,7 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
                 params.addValue("roleName", request.getRoleName());
             }
         }
-
+        sql.append(" order by roleName");
         return namedParameterJdbcTemplate.query(
                 sql.toString(),
                 params,
@@ -176,6 +177,15 @@ public class QuanLyNhanSuRepositoryImpl implements QuanLyNhanSuRepository {
     @Override
     public void xoaNhanSu(NhanSuRequest request) {
         String sql = "update users set IS_ACTIVE = 0 where EMAIL = :email and USER_NAME = :userName";
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userName", request.getUserName());
+        params.addValue("email", request.getEmail());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public void moKhoaNhanSu(NhanSuRequest request) {
+        String sql = "update users set IS_ACTIVE = 1 where EMAIL = :email and USER_NAME = :userName";
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userName", request.getUserName());
         params.addValue("email", request.getEmail());

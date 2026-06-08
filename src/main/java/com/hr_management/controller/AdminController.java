@@ -81,7 +81,13 @@ public class AdminController {
     @PostMapping("/xoa-nhan-su")
     public ResponseEntity<?> xoaNhanSu(@RequestBody @Valid NhanSuRequest request) {
         quanLyNhanSuService.xoaNhanSu(request);
-        return ResponseEntity.ok("Xoá nhân sự thành công!");
+        return ResponseEntity.ok("Khoá tài khoản nhân sự thành công!");
+    }
+
+    @PostMapping("/mo-khoa-nhan-su")
+    public ResponseEntity<?> moKhoaNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        quanLyNhanSuService.moKhoaNhanSu(request);
+        return ResponseEntity.ok("Mở khoá tài khoản nhân sự thành công!");
     }
 
     @PostMapping("/them-moi-danh-muc")

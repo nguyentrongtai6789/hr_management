@@ -33,4 +33,9 @@ public class QuanLyNhanSuServiceImpl implements QuanLyNhanSuService {
     public void xoaNhanSu(NhanSuRequest request) {
         quanLyNhanSuRepository.xoaNhanSu(request);
     }
+
+    @Override
+    public void moKhoaNhanSu(NhanSuRequest request) {
+        quanLyNhanSuRepository.moKhoaNhanSu(request);
+    }
 }
