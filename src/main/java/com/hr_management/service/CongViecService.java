@@ -11,6 +11,8 @@ public interface CongViecService {
 
     void insertCongViec(CongViecRequest congViecRequest);
 
+    void adminInsertCongViec(CongViecRequest congViecRequest);
+
     void updateCongViecByUuid(CongViecRequest request);
 
     void deleteCongViecByUuid(String uuid);

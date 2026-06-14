@@ -17,4 +17,6 @@ public class QuanLyNhanSuResponse {
     private String email;
     private String userName;
     private String roleName;
+    private String ghiChu;
+    private Integer isActive;
 }

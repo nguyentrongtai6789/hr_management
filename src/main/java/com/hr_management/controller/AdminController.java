@@ -1,11 +1,13 @@
 package com.hr_management.controller;
 
 import com.hr_management.dto.request.CongViecRequest;
+import com.hr_management.dto.request.DanhMucRequest;
 import com.hr_management.dto.request.NhanSuRequest;
 import com.hr_management.repository.NhanSuRepository;
 import com.hr_management.service.AdminService;
 import com.hr_management.service.CongViecService;
 import com.hr_management.service.QuanLyNhanSuService;
+import com.hr_management.utils.TableName;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -55,7 +57,7 @@ public class AdminController {
     @PostMapping("/giao-cong-viec")
     public ResponseEntity<?> insertCongViec(@RequestBody CongViecRequest request, @RequestParam @NotBlank String nhanSuId) {
         request.setTrangThaiId(2);
-        congViecService.insertCongViec(request);
+        congViecService.adminInsertCongViec(request);
         return ResponseEntity.ok("Giao công việc thành công!");
     }
 
@@ -63,4 +65,42 @@ public class AdminController {
     public ResponseEntity<?> quanLyNhanSu(@RequestBody @Valid NhanSuRequest request) {
         return ResponseEntity.ok(quanLyNhanSuService.getAllNhanSu(request));
     }
+
+    @PostMapping("/them-nhan-su")
+    public ResponseEntity<?> themNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        quanLyNhanSuService.themMoiNhanSu(request);
+        return ResponseEntity.ok("Thêm mới nhân sự thành công!");
+    }
+
+    @PostMapping("/cap-nhat-nhan-su")
+    public ResponseEntity<?> capNhatNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        quanLyNhanSuService.capNhatNhanSu(request);
+        return ResponseEntity.ok("Cập nhật nhân sự thành công!");
+    }
+
+    @PostMapping("/xoa-nhan-su")
+    public ResponseEntity<?> xoaNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        quanLyNhanSuService.xoaNhanSu(request);
+        return ResponseEntity.ok("Khoá tài khoản nhân sự thành công!");
+    }
+
+    @PostMapping("/mo-khoa-nhan-su")
+    public ResponseEntity<?> moKhoaNhanSu(@RequestBody @Valid NhanSuRequest request) {
+        quanLyNhanSuService.moKhoaNhanSu(request);
+        return ResponseEntity.ok("Mở khoá tài khoản nhân sự thành công!");
+    }
+
+    @PostMapping("/them-moi-danh-muc")
+    public ResponseEntity<?> themMoiDanhMuc(@RequestBody @Valid DanhMucRequest request, @RequestParam @NotBlank String nameOfTable) {
+        adminService.themMoiDanhMuc(request, TableName.valueOf(nameOfTable.toUpperCase()));
+        return ResponseEntity.ok("Thêm mới danh mục thành công!");
+    }
+
+    @PostMapping("/cap-nhat-danh-muc")
+    public ResponseEntity<?> capNhatDanhMuc(@RequestBody @Valid DanhMucRequest request, @RequestParam @NotBlank String nameOfTable) {
+        adminService.capNhatDanhMuc(request, TableName.valueOf(nameOfTable.toUpperCase()));
+        return ResponseEntity.ok("Cập nhật danh mục thành công!");
+    }
+
+
 }

@@ -6,4 +6,9 @@ import java.util.List;
 
 public interface QuanLyNhanSuRepository {
     List<QuanLyNhanSuResponse> findAllNhanSu(NhanSuRequest request);
+    void themMoiNhanSu(NhanSuRequest request);
+    void capNhatNhanSu(NhanSuRequest request);
+    void xoaNhanSu(NhanSuRequest request);
+    void moKhoaNhanSu(NhanSuRequest request);
+
 }

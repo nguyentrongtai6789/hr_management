@@ -40,7 +40,12 @@ public class CongViecServiceImpl implements CongViecService {
 
     @Override
     public void insertCongViec(CongViecRequest request) {
-        congViecRepository.insertCongViec(request, request.getNhanSuIds().getFirst());
+        congViecRepository.insertCongViec(request, getNhanSuId());
+    }
+
+    @Override
+    public void adminInsertCongViec(CongViecRequest congViecRequest) {
+        congViecRepository.insertCongViec(congViecRequest, congViecRequest.getNhanSuIds().getFirst());
     }
 
     @Override
